@@ -42,7 +42,7 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
         .then((value) {
       setState(() {
         loading = false;
-      });
+             });
     }).onError((error, stackTrace) {
       Utils().toastMessage(error.toString());
       setState(() {
@@ -55,7 +55,7 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: GlobalVariables.secondaryColor,
+        // backgroundColor: GlobalVariables.secondaryColor,
         title: Center(
           child: Text(
             "Sign Up",
@@ -101,6 +101,9 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
                 if (_signupFormKey.currentState!.validate()) {
                   signUp();
                 }
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
+
               },
             ),
             Row(

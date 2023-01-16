@@ -28,7 +28,8 @@ class Custom_btn extends StatelessWidget {
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: GlobalVariables.secondaryColor,
+            // backgroundColor: GlobalVariables.secondaryColor,
+            backgroundColor: Colors.orange[400],
             minimumSize: Size(double.infinity, 40),
           ),
         ),

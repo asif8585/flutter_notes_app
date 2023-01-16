@@ -3,6 +3,7 @@ import 'package:firebase_flutter_int/ui/posts/post_screen.dart';
 import 'package:firebase_flutter_int/ui/utilities/utils.dart';
 import 'package:firebase_flutter_int/widgets/custom_btn.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Add_PostScreen extends StatefulWidget {
   const Add_PostScreen({Key? key}) : super(key: key);
@@ -14,7 +15,9 @@ class Add_PostScreen extends StatefulWidget {
 class _Add_PostScreenState extends State<Add_PostScreen> {
   bool loading = false;
   final db_reference = FirebaseDatabase.instance.ref('Post');
-  final postController = TextEditingController();
+  final titleController = TextEditingController();
+  final noteController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +33,20 @@ class _Add_PostScreenState extends State<Add_PostScreen> {
               height: 18,
             ),
             TextFormField(
-              controller: postController,
+              controller: titleController,
+
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Title",
+              ),
+            ),
+            SizedBox(height: 10,),
+            TextFormField(
+              controller: noteController,
               maxLines: 4,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: "Enter Your Post",
+                hintText: "Enter your note",
               ),
             ),
             SizedBox(
@@ -56,9 +68,16 @@ class _Add_PostScreenState extends State<Add_PostScreen> {
                     .now()
                     .millisecondsSinceEpoch
                     .toString();
+
+                DateTime now = DateTime.now();
+                String formattedDate = DateFormat.yMMMd().format(now);
+
                 db_reference.child(id).set({
                   'id': id,
-                  'note': postController.text.toString(),
+                  'title': titleController.text.toString(),
+                  'subtitle': noteController.text.toString(),
+                  'date_id': formattedDate
+
                 }).then((value) {
                   setState(() {
                     loading = false;

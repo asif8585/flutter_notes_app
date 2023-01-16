@@ -8,8 +8,7 @@ import 'package:firebase_flutter_int/ui/posts/post_screen.dart';
 import 'package:firebase_flutter_int/widgets/custom_btn.dart';
 import 'package:firebase_flutter_int/widgets/custom_textForm.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import '../main.dart';
 import '../ui/utilities/utils.dart';
 
 enum Auth_method { email, phone }
@@ -32,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneFormKey = GlobalKey<FormState>();
   bool loading = false;
   final _auth = FirebaseAuth.instance;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
             email: _emailController.text, password: _passwordController.text)
         .then((value) {
       Utils().toastMessage(value.user!.email.toString());
+
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -73,153 +74,161 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: GlobalVariables.secondaryColor,
+        // backgroundColor: Colors.orange[400],
         title: Center(
           child: Text(
-            "Login",
+            "Welcome",
             style: TextStyle(
-                fontSize: 22, color: Colors.white, fontWeight: FontWeight.w800),
+                fontSize: 22,
+                // color: Colors.white,
+                fontWeight: FontWeight.w500),
           ),
         ),
       ),
-      body: Column(
-        children: [
-          ListTile(
-            tileColor: _auth_method == Auth_method.email
-                ? GlobalVariables.backgroundColor
-                : GlobalVariables.greyBackgroundCOlor,
-            title: Text("Login with email"),
-            leading: Radio(
-              activeColor: GlobalVariables.secondaryColor,
-              value: Auth_method.email,
-              groupValue: _auth_method,
-              onChanged: (Auth_method? value) {
-                setState(() {
-                  _auth_method = value!;
-                });
-              },
-            ),
-          ),
-          if (_auth_method == Auth_method.email)
-            Container(
-              child: Form(
-                key: _signupFormKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CustomTextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      hintText: 'Enter email',
-                      icon: Icon(Icons.email_outlined),
-                    ),
-                    CustomTextFormField(
-                      controller: _passwordController,
-                      keyboardType: TextInputType.visiblePassword,
-                      hintText: 'Enter password',
-                      icon: Icon(Icons.lock_outline),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Custom_btn(
-                      loading: loading,
-                      btn_title: "Login",
-                      onTap: () {
-                        if (_signupFormKey.currentState!.validate()) {
-                          login();
-                        }
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Don't have an account ?",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignUp_Screen(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "Sign Up",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: [
+              ListTile(
+                tileColor: _auth_method == Auth_method.email
+                    ? Colors.orange[200]
+                    :Colors.blueGrey[50],
+                title: Text("Login with email"),
+                leading: Radio(
+                  activeColor: GlobalVariables.secondaryColor,
+                  value: Auth_method.email,
+                  groupValue: _auth_method,
+                  onChanged: (Auth_method? value) {
+                    setState(() {
+                      _auth_method = value!;
+                    });
+                  },
                 ),
               ),
-            ),
-          SizedBox(height: 15,),
-          ListTile(
-            tileColor: _auth_method == Auth_method.phone
-                ? GlobalVariables.backgroundColor
-                : GlobalVariables.greyBackgroundCOlor,
-            title: Text("Login with phone"),
-            leading: Radio(
-              activeColor: GlobalVariables.secondaryColor,
-              value: Auth_method.phone,
-              groupValue: _auth_method,
-              onChanged: (Auth_method? value) {
-                setState(() {
-                  _auth_method = value!;
-                });
-              },
-            ),
-          ),
-          if (_auth_method == Auth_method.phone)
-            Container(
-              child: Form(
-                key: _phoneFormKey,
-                child: Column(
-                  children: [
-                    CustomTextFormField(
-                        controller: _phoneNumberController,
-
-                        hintText: "Phone number",
-                        icon: Icon(Icons.phone),
-                        keyboardType: TextInputType.number),
-                    Custom_btn(
-                      loading: loading,
-                      btn_title: "Login",
-                      onTap: () {
-                        if (_phoneFormKey.currentState!.validate()) {
-                          _auth.verifyPhoneNumber(
-                            phoneNumber: "+91"+_phoneNumberController.text,
-                            verificationCompleted: (phoneAuthCredential) {},
-                            verificationFailed: (error) {
-                              Utils().toastMessage(error.toString());
-                            },
-                            codeSent: (String verificationId, int? token) {
-                              Navigator.push(
+              if (_auth_method == Auth_method.email)
+                Container(
+                  child: Form(
+                    key: _signupFormKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CustomTextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          hintText: 'Enter email',
+                          icon: Icon(Icons.email_outlined),
+                        ),
+                        CustomTextFormField(
+                          controller: _passwordController,
+                          keyboardType: TextInputType.visiblePassword,
+                          hintText: 'Enter password',
+                          icon: Icon(Icons.lock_outline),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Custom_btn(
+                          loading: loading,
+                          btn_title: "Login",
+                          onTap: () {
+                            if (_signupFormKey.currentState!.validate()) {
+                              login();
+                            }
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Don't have an account ?",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => VerifyCodeScreen(
-                                      verification: verificationId,
-                                    ),
-                                  ));
-                            },
-                            codeAutoRetrievalTimeout: (error) {
-                              Utils().toastMessage(error.toString());
-                            },
-                          );
-                        }
-                      },
+                                    builder: (context) => SignUp_Screen(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                  ],
+                  ),
+                ),
+              SizedBox(
+                height: 15,
+              ),
+              ListTile(
+                tileColor: _auth_method == Auth_method.phone
+                    ? Colors.orange[200]
+                    :Colors.blueGrey[50],
+                title: Text("Login with phone"),
+                leading: Radio(
+                  activeColor: GlobalVariables.secondaryColor,
+                  value: Auth_method.phone,
+                  groupValue: _auth_method,
+                  onChanged: (Auth_method? value) {
+                    setState(() {
+                      _auth_method = value!;
+                    });
+                  },
                 ),
               ),
-            )
-        ],
+              if (_auth_method == Auth_method.phone)
+                Container(
+                  child: Form(
+                    key: _phoneFormKey,
+                    child: Column(
+                      children: [
+                        CustomTextFormField(
+                            controller: _phoneNumberController,
+                            hintText: "Phone number",
+                            icon: Icon(Icons.phone),
+                            keyboardType: TextInputType.number),
+                        Custom_btn(
+                          loading: loading,
+                          btn_title: "Login",
+                          onTap: () {
+                            if (_phoneFormKey.currentState!.validate()) {
+                              _auth.verifyPhoneNumber(
+                                phoneNumber: "+91" + _phoneNumberController.text,
+                                verificationCompleted: (phoneAuthCredential) {},
+                                verificationFailed: (error) {
+                                  Utils().toastMessage(error.toString());
+                                },
+                                codeSent: (String verificationId, int? token) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => VerifyCodeScreen(
+                                          verification: verificationId,
+                                        ),
+                                      ));
+                                },
+                                codeAutoRetrievalTimeout: (error) {
+                                  Utils().toastMessage(error.toString());
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+            ],
+          ),
+        ),
       ),
     );
   }
